@@ -1,0 +1,32 @@
+[
+  {
+    "id": "scenario-1",
+    "name": "Quartz North",
+    "active_well_id": "active-demo-1",
+    "current_depth_m": 900.0,
+    "start_depth_m": 900.0,
+    "end_depth_m": 3600.0,
+    "step_m": 100.0,
+    "is_synthetic": true
+  },
+  {
+    "id": "scenario-2",
+    "name": "Juniper East",
+    "active_well_id": "active-demo-2",
+    "current_depth_m": 1500.0,
+    "start_depth_m": 1500.0,
+    "end_depth_m": 4100.0,
+    "step_m": 100.0,
+    "is_synthetic": true
+  },
+  {
+    "id": "scenario-3",
+    "name": "Lumen South",
+    "active_well_id": "active-demo-3",
+    "current_depth_m": 700.0,
+    "start_depth_m": 700.0,
+    "end_depth_m": 3300.0,
+    "step_m": 100.0,
+    "is_synthetic": true
+  }
+]

@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: torque_drag; depth: 3355-3436 m; formation: Flint; severity: critical.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

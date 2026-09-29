@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: cementing_issue; depth: 1785-1973 m; formation: Horizon; severity: medium.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

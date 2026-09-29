@@ -1,0 +1,50 @@
+[
+  {
+    "id": "formation-01",
+    "name": "Aster",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-02",
+    "name": "Banyan",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-03",
+    "name": "Cedar",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-04",
+    "name": "Dahlia",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-05",
+    "name": "Ember",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-06",
+    "name": "Flint",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-07",
+    "name": "Garnet",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  },
+  {
+    "id": "formation-08",
+    "name": "Horizon",
+    "region": "Fictional Kanchan Ridge Demo Region",
+    "is_synthetic": true
+  }
+]

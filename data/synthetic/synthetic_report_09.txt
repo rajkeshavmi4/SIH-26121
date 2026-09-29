@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: lost_circulation; depth: 920-1068 m; formation: Cedar; severity: low.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

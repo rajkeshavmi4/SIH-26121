@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: fishing; depth: 2490-2721 m; formation: Aster; severity: high.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: npt; depth: 3515-3668 m; formation: Banyan; severity: critical.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

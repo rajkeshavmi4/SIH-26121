@@ -1,0 +1,4 @@
+SYNTHETIC DEMO REPORT - FICTIONAL KANCHAN RIDGE DEMO REGION
+This document is invented for WELLSAGE AI testing and is not an Oil India record.
+Event type: stuck_pipe; depth: 2650-2773 m; formation: Ember; severity: high.
+Mitigation: Paused operations, verified returns, and reviewed offset evidence before continuing.

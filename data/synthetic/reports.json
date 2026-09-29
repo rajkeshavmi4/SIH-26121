@@ -1,0 +1,74 @@
+[
+  {
+    "document_id": "demo-report-01",
+    "filename": "synthetic_report_01.txt",
+    "event_id": "demo-event-001",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-02",
+    "filename": "synthetic_report_02.txt",
+    "event_id": "demo-event-006",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-03",
+    "filename": "synthetic_report_03.txt",
+    "event_id": "demo-event-011",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-04",
+    "filename": "synthetic_report_04.txt",
+    "event_id": "demo-event-016",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-05",
+    "filename": "synthetic_report_05.txt",
+    "event_id": "demo-event-021",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-06",
+    "filename": "synthetic_report_06.txt",
+    "event_id": "demo-event-026",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-07",
+    "filename": "synthetic_report_07.txt",
+    "event_id": "demo-event-031",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-08",
+    "filename": "synthetic_report_08.txt",
+    "event_id": "demo-event-036",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-09",
+    "filename": "synthetic_report_09.txt",
+    "event_id": "demo-event-041",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-10",
+    "filename": "synthetic_report_10.txt",
+    "event_id": "demo-event-046",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-11",
+    "filename": "synthetic_report_11.txt",
+    "event_id": "demo-event-051",
+    "is_synthetic": true
+  },
+  {
+    "document_id": "demo-report-12",
+    "filename": "synthetic_report_12.txt",
+    "event_id": "demo-event-056",
+    "is_synthetic": true
+  }
+]
