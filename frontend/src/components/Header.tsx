@@ -1,4 +1,5 @@
 import type { Scenario } from '../api';
+
 type Props = {
   scenarios: Scenario[];
   scenarioId: string;
@@ -6,23 +7,21 @@ type Props = {
   activeTab: string;
   onTab: (tab: string) => void;
 };
+
 const TABS = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'incidents', label: 'Incident Explorer' },
   { id: 'telemetry', label: 'Telemetry' },
   { id: 'intake', label: 'Report Intake' },
 ];
+
 export default function Header({ scenarios, scenarioId, onScenario, activeTab, onTab }: Props) {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(10,20,16,0.97)', backdropFilter: 'blur(8px)', borderBottom: '1px solid var(--line)' }}>
       <div className="shell" style={{ padding: '0 28px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
-          <div className="brand">
-            <div className="mark">W</div>
-            <div className="brand-text">
-              <div className="eyebrow">NWIS / SIH 26121</div>
-              <h1>WELLSAGE AI</h1>
-            </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 60 }}>
+          <div className="brand" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.png" alt="WellSage AI" style={{ height: 46, width: 'auto', objectFit: 'contain' }} />
           </div>
           <div className="top-actions">
             <div className="sys-status">
