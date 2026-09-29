@@ -1,0 +1,225 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=teal,
+    citecolor=teal,
+    urlcolor=teal
+}
+
+\title{\textbf{WellSage | Nearby Wells Intelligence System (NWIS)}\\\large Technical Specification, Mathematical Formulations, and Operational Feasibility}
+\author{Engineering Technical Report\\SIH 26121 - Oil India Limited (OIL)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+During hydrocarbon exploration in geologically complex formations, real-time monitoring platforms such as Oil India Limited's eRTMAC monitor active well parameters but lack automated, depth-correlated retrieval of historical offset-well institutional knowledge. WellSage is an offset intelligence platform designed to ingest historical Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs), rank offset relevance using a multi-factor geodetic and stratigraphic kernel, align operational events by measured depth, and generate deterministic, explainable risk alerts. This paper documents the theoretical, mathematical, and algorithmic architecture of WellSage, encompassing ellipsoidal distance metrics, mechanical specific energy (MSE) anomaly detection, Herschel-Bulkley annular hydraulics, and Bayesian hazard evidence fusion.
+\end{abstract}
+
+\section{Introduction and Problem Context}
+In drilling operations across the Upper Assam Basin (including Nahorkatiya, Moran, Dikom, and Baghjan fields), drilling engineers frequently confront severe non-productive time (NPT) hazards:
+\begin{itemize}
+    \item Severe and total mud losses in porous Tipam sandstones.
+    \item High-pressure gas kicks and coal seam spalling within the Barail Group.
+    \item Clay swelling, tight hole, and mechanical pipe sticking in Girujan clays.
+    \item Overpressure transitions in the Kopili and Disang formations.
+\end{itemize}
+
+While eRTMAC streams real-time surface and downhole sensor data (WOB, RPM, torque, flow rate, standpipe pressure), past experiences and mitigations remain locked in unstructured Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs). WellSage bridges this gap by acting as an offset memory engine that correlates historical offset events against active bit depth in real time.
+
+\section{Geodetic Spatial Modeling on the WGS84 Ellipsoid}
+Rather than relying on planar Euclidean or spherical approximations, WellSage models geospatial distance on the WGS84 ellipsoidal reference frame:
+\begin{equation}
+a = 6378137.0\text{ m}, \quad f = \frac{1}{298.257223563}, \quad b = a(1 - f) = 6356752.314245\text{ m}
+\end{equation}
+
+For active well location $P_1 = (\phi_1, L_1)$ and historical offset well $P_2 = (\phi_2, L_2)$, reduced latitudes $U_1, U_2$ satisfy:
+\begin{equation}
+\tan U_1 = (1 - f)\tan \phi_1, \quad \tan U_2 = (1 - f)\tan \phi_2
+\end{equation}
+
+The Vincenty inverse iterative formulation solves angular separation $\sigma$ and forward azimuth $\alpha$:
+\begin{equation}
+\sin \sigma = \sqrt{(\cos U_2 \sin \lambda)^2 + (\cos U_1 \sin U_2 - \sin U_1 \cos U_2 \cos \lambda)^2}
+\end{equation}
+\begin{equation}
+\cos \sigma = \sin U_1 \sin U_2 + \cos U_1 \cos U_2 \cos \lambda
+\end{equation}
+\begin{equation}
+\sigma = \arctan2(\sin \sigma, \cos \sigma)
+\end{equation}
+\begin{equation}
+\sin \alpha = \frac{\cos U_1 \cos U_2 \sin \lambda}{\sin \sigma}, \quad \cos^2 \alpha = 1 - \sin^2 \alpha
+\end{equation}
+\begin{equation}
+\cos(2\sigma_m) = \cos \sigma - \frac{2 \sin U_1 \sin U_2}{\cos^2 \alpha}
+\end{equation}
+
+The geodesic distance $s_{12}$ is:
+\begin{equation}
+u^2 = \cos^2 \alpha \left(\frac{a^2 - b^2}{b^2}\right)
+\end{equation}
+\begin{equation}
+A = 1 + \frac{u^2}{16384} \left(4096 + u^2 (-768 + u^2 (320 - 175 u^2))\right)
+\end{equation}
+\begin{equation}
+B = \frac{u^2}{1024} \left(256 + u^2 (-128 + u^2 (74 - 47 u^2))\right)
+\end{equation}
+\begin{equation}
+\Delta \sigma = B \sin \sigma \left(\cos(2\sigma_m) + \frac{1}{4} B \left(\cos \sigma (-1 + 2 \cos^2(2\sigma_m)) - \frac{1}{6} B \cos(2\sigma_m) (-3 + 4 \sin^2 \sigma)(-3 + 4 \cos^2(2\sigma_m))\right)\right)
+\end{equation}
+\begin{equation}
+s_{12} = b A (\sigma - \Delta \sigma)
+\end{equation}
+
+\section{Multi-Factor Offset Relevance Scoring (ORS)}
+To avoid ranking offset wells solely by surface proximity, WellSage employs a multi-dimensional feature vector $\mathbf{\Phi}_i \in [0, 1]^5$ for each offset candidate $i$:
+\begin{equation}
+\mathbf{\Phi}_i = \begin{bmatrix} G_i \\ F_i \\ D_i \\ T_i \\ E_i \end{bmatrix} = \begin{bmatrix} \text{Geographic Radial Kernel} \\ \text{Stratigraphic Hierarchy Alignment} \\ \text{Measured Depth Overlap} \\ \text{3D Trajectory Minimum Curvature Similarity} \\ \text{Historical Incident Density Factor} \end{bmatrix}
+\end{equation}
+
+The canonical weight vector $\mathbf{w}$ is established as:
+\begin{equation}
+\mathbf{w} = \begin{bmatrix} 0.25 & 0.30 & 0.20 & 0.10 & 0.15 \end{bmatrix}^T, \quad \sum_{k=1}^5 w_k = 1.0
+\end{equation}
+
+\subsection{Component Formulations}
+\begin{itemize}
+    \item \textbf{Spatial Kernel ($G_i$):} Computed over user-selected search radius $R_{\max}$ ($20\text{ km} \le R_{\max} \le 100\text{ km}$):
+    \begin{equation}
+    G_i = \max\left(0, 1.0 - \frac{s_{12}^{(i)}}{R_{\max}}\right)
+    \end{equation}
+
+    \item \textbf{Stratigraphic Alignment ($F_i$):} Evaluated across the basin taxonomy tree $\mathcal{T}$:
+    \begin{equation}
+    F_i = \frac{2 \cdot \text{depth}(\text{LCA}(\tau_a, \tau_i))}{\text{depth}(\tau_a) + \text{depth}(\tau_i)}
+    \end{equation}
+    Where $\text{LCA}(\tau_a, \tau_i)$ is the Lowest Common Ancestor between active target formation $\tau_a$ and candidate formation $\tau_i$.
+
+    \item \textbf{Depth Interval Overlap ($D_i$):} Given active look-ahead window $I_a = [d_a - 100, d_a + L]$ and offset logged interval $I_i = [d_{\text{top}}^{(i)}, d_{\text{base}}^{(i)}]$:
+    \begin{equation}
+    D_i = \frac{\max\left(0, \min(d_a + L, d_{\text{base}}^{(i)}) - \max(d_a - 100, d_{\text{top}}^{(i)})\right)}{\max\left(1.0, (d_a + L) - (d_a - 100)\right)}
+    \end{equation}
+
+    \item \textbf{Trajectory Vector Similarity ($T_i$):} Minimum curvature direction vectors $\mathbf{t}_a(z)$ and $\mathbf{t}_i(z)$:
+    \begin{equation}
+    T_i = \frac{1}{|I_{\text{overlap}}|} \int_{I_{\text{overlap}}} \left( \frac{1 + \mathbf{t}_a(z) \cdot \mathbf{t}_i(z)}{2} \right) dz
+    \end{equation}
+
+    \item \textbf{Event Relevance ($E_i$):} Quantifies incident frequency normalized against total events in the field.
+\end{itemize}
+
+\subsection{Missing Data Handling and Weight Redistribution}
+For offset records with missing attributes, an indicator vector $\mathbf{m}_i \in \{0, 1\}^5$ marks feature existence. Weights are dynamically normalized:
+\begin{equation}
+ORS_i = 100 \times \frac{\sum_{k=1}^5 w_k \cdot m_{i, k} \cdot \Phi_{i, k}}{\sum_{k=1}^5 w_k \cdot m_{i, k}}
+\end{equation}
+Data completeness $C_i = \frac{1}{5} \sum_{k=1}^5 m_{i, k}$ is displayed alongside $ORS_i$ to ensure full operational transparency.
+
+\section{Real-Time Drilling Mechanics and Anomaly Detection}
+
+\subsection{Mechanical Specific Energy (MSE)}
+Teale's mechanical specific energy model quantifies rock cutting efficiency:
+\begin{equation}
+MSE = \frac{WOB}{A_b} + \frac{120 \pi \cdot RPM \cdot \tau}{A_b \cdot ROP}
+\end{equation}
+Where $WOB$ is Weight on Bit ($\text{N}$), $A_b = \frac{\pi}{4} D_b^2$ is bit area ($\text{m}^2$), $RPM$ is rotary speed, $\tau$ is torque ($\text{N}\cdot\text{m}$), and $ROP$ is rate of penetration ($\text{m/s}$).
+
+A sudden divergence in $MSE$ without lithology change indicates wellbore dysfunction:
+\begin{equation}
+\Delta MSE(t) = \frac{MSE(t) - \overline{MSE}_{t-10}}{\overline{MSE}_{t-10}} > 2.50 \implies \text{Severe Bit Balling / Pack-Off Risk}
+\end{equation}
+
+\subsection{Normalized Compaction Exponent ($d_{cs}$)}
+Overpressure detection relies on the modified Jorden-Shirley drilling exponent:
+\begin{equation}
+d = \frac{\log_{10}\left(\frac{ROP}{60 \cdot RPM}\right)}{\log_{10}\left(\frac{12 \cdot WOB}{10^6 \cdot D_b}\right)}, \quad d_{cs} = d \cdot \left(\frac{\rho_{\text{norm}}}{ECD}\right)
+\end{equation}
+A negative departure from the normal compaction trend signals under-compacted geopressured shales:
+\begin{equation}
+\frac{\partial d_{cs}}{\partial z} < -0.0015\text{ m}^{-1} \implies \text{Abnormal Pore Pressure Influx Trigger}
+\end{equation}
+
+\subsection{Annular Hydraulics and Equivalent Circulating Density (ECD)}
+Under the Herschel-Bulkley fluid model ($\tau = \tau_y + K \dot{\gamma}^n$), the annular shear stress $\tau_w$ is evaluated over hydraulic diameter $D_h = D_{\text{hole}} - D_{\text{pipe}}$:
+\begin{equation}
+\dot{\gamma}_{\text{wall}} = \left(\frac{3n + 1}{4n}\right) \left(\frac{8 v_a}{D_h}\right), \quad \tau_w = \tau_y + K \left(\dot{\gamma}_{\text{wall}}\right)^n
+\end{equation}
+\begin{equation}
+ECD = \rho_{\text{mud}} + \frac{4 \tau_w \Delta L}{g \cdot TVD \cdot D_h}
+\end{equation}
+
+\section{Proactive Hazard Proximity and Bayesian Evidence Fusion}
+
+\subsection{Three-State Hazard Proximity Machine}
+Let an offset drilling incident span measured depth $[d_s, d_e]$. The operational lifecycle state $\mathcal{S}(d_a)$ relative to bit depth $d_a$ with look-ahead buffer $L = 300\text{ m}$ is:
+\begin{equation}
+\mathcal{S}(d_a) = \begin{cases} 
+\text{`in\_zone'}, & \text{if } d_s \le d_a \le d_e \\
+\text{`upcoming'}, & \text{if } d_s - L \le d_a < d_s \\
+\text{`passed'}, & \text{if } d_a > d_e \\
+\text{`outside'}, & \text{if } d_a < d_s - L
+\end{cases}
+\end{equation}
+
+\subsection{Composite Proximity Hazard Index ($R_c$)}
+Across candidate offset set $\Omega$, the interval hazard score is computed as:
+\begin{equation}
+R_c = 100 \times \frac{\sum_{i \in \Omega} ORS_i \cdot \max_{j} \left( \frac{S_j}{4} \cdot \mu(\mathcal{S}(d_a, \mathcal{H}_j)) \right)}{\sum_{i \in \Omega} ORS_i}
+\end{equation}
+Where $S_j \in \{1, 2, 3, 4\}$ denotes severity, and proximity damping $\mu$ is:
+\begin{equation}
+\mu(\mathcal{S}) = \begin{cases} 
+1.00, & \text{if } \mathcal{S} = \text{`in\_zone'} \\
+1.00 - 0.70 \left(\frac{d_s - d_a}{L}\right), & \text{if } \mathcal{S} = \text{`upcoming'} \\
+0.00, & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\section{Hazard Threshold Matrix}
+Table~\ref{tab:thresholds} outlines the operational limits integrated into the WellSage anomaly engine.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{llXll}
+\toprule
+\textbf{Drilling Parameter} & \textbf{Unit} & \textbf{Operating Range} & \textbf{Trigger Threshold} & \textbf{Risk Classification} \\
+\midrule
+Surface Torque ($\tau$) & $\text{kNm}$ & $8.0 - 22.0$ & $> 25.0$ & Stuck Pipe / Keyseating \\
+Mud Flow Rate ($Q$) & $\text{lpm}$ & $1800 - 3200$ & $< 500.0$ & Severe Lost Circulation \\
+Standpipe Pressure ($SPP$) & $\text{kPa}$ & $14000 - 24000$ & $> 27000$ & Annular Pack-off \\
+ECD & $\text{kg/L}$ & $1.25 - 1.65$ & $> 1.80$ & Wellbore Fracturing \\
+ROP at High WOB & $\text{m/hr}$ & $3.0 - 18.0$ & $< 0.50$ (at $WOB > 120\text{ kN}$) & Differential Sticking \\
+Compaction Slope ($\partial d_{cs} / \partial z$) & $\text{m}^{-1}$ & $\ge 0.0$ & $< -0.0015$ & Overpressure Gas Influx \\
+\bottomrule
+\end{tabularx}
+\caption{Deterministic operational threshold matrix for real-time risk triggering.}
+\label{tab:thresholds}
+\end{table}
+
+\section{System Architecture and Implementation}
+The implementation comprises:
+\begin{enumerate}
+    \item \textbf{Backend Core (Python 3.14 + FastAPI + SQLAlchemy):} Modular service structure (`offset_engine.py`, `depth_correlation.py`, `risk_engine.py`, `anomaly_detector.py`, `ingestion.py`).
+    \item \textbf{Frontend GIS Console (React 18 + TypeScript + Vite + Leaflet):} Satellite imagery base layer (ESRI World Imagery), user-defined radius corridor ($20 - 100\text{ km}$), real-time simulation controls, and depth correlation canvas.
+    \item \textbf{Data Ingestion Layer:} Deterministic PDF and text parser extracting interval boundaries, event tags, lithology, and recorded operational mitigations with audit trails.
+\end{enumerate}
+
+\section{Conclusion}
+WellSage delivers a mathematically grounded, deterministic decision-support architecture for Oil India Limited. By synthesizing geodetic spatial kernels, stratigraphic ontology alignment, drilling physics equations, and depth-correlated institutional memory, the system enables drilling teams to transition from reactive troubleshooting to proactive hazard mitigation.
+
+\end{document}
