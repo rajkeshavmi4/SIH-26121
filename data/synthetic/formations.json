@@ -1,49 +1,49 @@
 [
   {
     "id": "formation-01",
-    "name": "Aster",
+    "name": "Girujan",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-02",
-    "name": "Banyan",
+    "name": "Tipam",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-03",
-    "name": "Cedar",
+    "name": "Barail",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-04",
-    "name": "Dahlia",
+    "name": "Tikak Parbat",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-05",
-    "name": "Ember",
+    "name": "Kopili",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-06",
-    "name": "Flint",
+    "name": "Sylhet",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-07",
-    "name": "Garnet",
+    "name": "Narpuh",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   },
   {
     "id": "formation-08",
-    "name": "Horizon",
+    "name": "Lakshmi",
     "region": "Fictional Kanchan Ridge Demo Region",
     "is_synthetic": true
   }

@@ -1,4 +1,4 @@
-# WELLSAGE AI data dictionary
+# NAMOWELL AI data dictionary
 
 | Entity | Field | Unit / meaning |
 |---|---|---|

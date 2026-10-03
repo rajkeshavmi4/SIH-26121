@@ -6,7 +6,7 @@
     "longitude": 91.652271,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3520,
-    "formation": "Aster",
+    "formation": "Girujan",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -18,7 +18,7 @@
     "longitude": 91.792854,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3150,
-    "formation": "Banyan",
+    "formation": "Tipam",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -30,7 +30,7 @@
     "longitude": 91.667077,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4553,
-    "formation": "Cedar",
+    "formation": "Barail",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -42,7 +42,7 @@
     "longitude": 91.789161,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4168,
-    "formation": "Dahlia",
+    "formation": "Tikak Parbat",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -54,7 +54,7 @@
     "longitude": 91.797873,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 2990,
-    "formation": "Ember",
+    "formation": "Kopili",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -66,7 +66,7 @@
     "longitude": 91.801684,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3498,
-    "formation": "Flint",
+    "formation": "Sylhet",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -78,7 +78,7 @@
     "longitude": 91.853176,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3851,
-    "formation": "Garnet",
+    "formation": "Narpuh",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -90,7 +90,7 @@
     "longitude": 91.591994,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3893,
-    "formation": "Horizon",
+    "formation": "Lakshmi",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -102,7 +102,7 @@
     "longitude": 91.615562,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4292,
-    "formation": "Aster",
+    "formation": "Girujan",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -114,7 +114,7 @@
     "longitude": 91.739428,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4303,
-    "formation": "Banyan",
+    "formation": "Tipam",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -126,7 +126,7 @@
     "longitude": 91.679286,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3597,
-    "formation": "Cedar",
+    "formation": "Barail",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -138,7 +138,7 @@
     "longitude": 91.786576,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3798,
-    "formation": "Dahlia",
+    "formation": "Tikak Parbat",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -150,7 +150,7 @@
     "longitude": 91.576533,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4293,
-    "formation": "Ember",
+    "formation": "Kopili",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -162,7 +162,7 @@
     "longitude": 91.560967,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4087,
-    "formation": "Flint",
+    "formation": "Sylhet",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -174,7 +174,7 @@
     "longitude": 91.641394,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3822,
-    "formation": "Garnet",
+    "formation": "Narpuh",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -186,7 +186,7 @@
     "longitude": 91.8108,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4567,
-    "formation": "Horizon",
+    "formation": "Lakshmi",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -198,7 +198,7 @@
     "longitude": 91.570507,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4333,
-    "formation": "Aster",
+    "formation": "Girujan",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -210,7 +210,7 @@
     "longitude": 91.824767,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3019,
-    "formation": "Banyan",
+    "formation": "Tipam",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -222,7 +222,7 @@
     "longitude": 91.798518,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4178,
-    "formation": "Cedar",
+    "formation": "Barail",
     "trajectory": "deviated",
     "status": "historical",
     "is_synthetic": true
@@ -234,7 +234,7 @@
     "longitude": 91.852111,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3672,
-    "formation": "Dahlia",
+    "formation": "Tikak Parbat",
     "trajectory": "vertical",
     "status": "historical",
     "is_synthetic": true
@@ -246,7 +246,7 @@
     "longitude": 91.73,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3600,
-    "formation": "Banyan",
+    "formation": "Tipam",
     "trajectory": "deviated",
     "status": "active",
     "is_synthetic": true
@@ -258,7 +258,7 @@
     "longitude": 91.76,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 4100,
-    "formation": "Cedar",
+    "formation": "Barail",
     "trajectory": "deviated",
     "status": "active",
     "is_synthetic": true
@@ -270,7 +270,7 @@
     "longitude": 91.79,
     "basin": "Fictional Kanchan Ridge Demo Region",
     "total_depth_m": 3300,
-    "formation": "Dahlia",
+    "formation": "Tikak Parbat",
     "trajectory": "deviated",
     "status": "active",
     "is_synthetic": true

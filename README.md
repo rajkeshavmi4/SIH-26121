@@ -1,6 +1,6 @@
-# WELLSAGE AI
+# NAMOWELL AI
 
-WELLSAGE AI is a local, decision-support prototype for Smart India Hackathon problem statement 26121: Nearby Wells Intelligence System (NWIS).
+NAMOWELL AI is a local, decision-support prototype for Smart India Hackathon problem statement 26121: Nearby Wells Intelligence System (NWIS).
 
 > **Safety boundary:** All bundled records are deterministic synthetic demo data. Alerts describe historical hazard proximity only; they are not failure probabilities, drilling instructions, or an operational safety system.
 

@@ -13,7 +13,7 @@ class EventResponse(SchemaBase):
     severity: str
     description: str | None
     recorded_mitigation: str
-    source_document_id: int | None
+    source_document_id: str | None
     source_page: int | None
     extraction_status: str
     data_origin: str

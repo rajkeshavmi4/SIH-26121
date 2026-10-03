@@ -17,7 +17,7 @@
     urlcolor=teal
 }
 
-\title{\textbf{WellSage | Nearby Wells Intelligence System (NWIS)}\\\large Technical Specification, Mathematical Formulations, and Operational Feasibility}
+\title{\textbf{Namowell | Nearby Wells Intelligence System (NWIS)}\\\large Technical Specification, Mathematical Formulations, and Operational Feasibility}
 \author{Engineering Technical Report\\SIH 26121 - Oil India Limited (OIL)}
 \date{\today}
 
@@ -26,7 +26,7 @@
 \maketitle
 
 \begin{abstract}
-During hydrocarbon exploration in geologically complex formations, real-time monitoring platforms such as Oil India Limited's eRTMAC monitor active well parameters but lack automated, depth-correlated retrieval of historical offset-well institutional knowledge. WellSage is an offset intelligence platform designed to ingest historical Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs), rank offset relevance using a multi-factor geodetic and stratigraphic kernel, align operational events by measured depth, and generate deterministic, explainable risk alerts. This paper documents the theoretical, mathematical, and algorithmic architecture of WellSage, encompassing ellipsoidal distance metrics, mechanical specific energy (MSE) anomaly detection, Herschel-Bulkley annular hydraulics, and Bayesian hazard evidence fusion.
+During hydrocarbon exploration in geologically complex formations, real-time monitoring platforms such as Oil India Limited's eRTMAC monitor active well parameters but lack automated, depth-correlated retrieval of historical offset-well institutional knowledge. Namowell is an offset intelligence platform designed to ingest historical Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs), rank offset relevance using a multi-factor geodetic and stratigraphic kernel, align operational events by measured depth, and generate deterministic, explainable risk alerts. This paper documents the theoretical, mathematical, and algorithmic architecture of Namowell, encompassing ellipsoidal distance metrics, mechanical specific energy (MSE) anomaly detection, Herschel-Bulkley annular hydraulics, and Bayesian hazard evidence fusion.
 \end{abstract}
 
 \section{Introduction and Problem Context}
@@ -38,10 +38,10 @@ In drilling operations across the Upper Assam Basin (including Nahorkatiya, Mora
     \item Overpressure transitions in the Kopili and Disang formations.
 \end{itemize}
 
-While eRTMAC streams real-time surface and downhole sensor data (WOB, RPM, torque, flow rate, standpipe pressure), past experiences and mitigations remain locked in unstructured Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs). WellSage bridges this gap by acting as an offset memory engine that correlates historical offset events against active bit depth in real time.
+While eRTMAC streams real-time surface and downhole sensor data (WOB, RPM, torque, flow rate, standpipe pressure), past experiences and mitigations remain locked in unstructured Well Completion Reports (WCRs) and Daily Drilling Reports (DDRs). Namowell bridges this gap by acting as an offset memory engine that correlates historical offset events against active bit depth in real time.
 
 \section{Geodetic Spatial Modeling on the WGS84 Ellipsoid}
-Rather than relying on planar Euclidean or spherical approximations, WellSage models geospatial distance on the WGS84 ellipsoidal reference frame:
+Rather than relying on planar Euclidean or spherical approximations, Namowell models geospatial distance on the WGS84 ellipsoidal reference frame:
 \begin{equation}
 a = 6378137.0\text{ m}, \quad f = \frac{1}{298.257223563}, \quad b = a(1 - f) = 6356752.314245\text{ m}
 \end{equation}
@@ -86,7 +86,7 @@ s_{12} = b A (\sigma - \Delta \sigma)
 \end{equation}
 
 \section{Multi-Factor Offset Relevance Scoring (ORS)}
-To avoid ranking offset wells solely by surface proximity, WellSage employs a multi-dimensional feature vector $\mathbf{\Phi}_i \in [0, 1]^5$ for each offset candidate $i$:
+To avoid ranking offset wells solely by surface proximity, Namowell employs a multi-dimensional feature vector $\mathbf{\Phi}_i \in [0, 1]^5$ for each offset candidate $i$:
 \begin{equation}
 \mathbf{\Phi}_i = \begin{bmatrix} G_i \\ F_i \\ D_i \\ T_i \\ E_i \end{bmatrix} = \begin{bmatrix} \text{Geographic Radial Kernel} \\ \text{Stratigraphic Hierarchy Alignment} \\ \text{Measured Depth Overlap} \\ \text{3D Trajectory Minimum Curvature Similarity} \\ \text{Historical Incident Density Factor} \end{bmatrix}
 \end{equation}
@@ -190,7 +190,7 @@ Where $S_j \in \{1, 2, 3, 4\}$ denotes severity, and proximity damping $\mu$ is:
 \end{equation}
 
 \section{Hazard Threshold Matrix}
-Table~\ref{tab:thresholds} outlines the operational limits integrated into the WellSage anomaly engine.
+Table~\ref{tab:thresholds} outlines the operational limits integrated into the Namowell anomaly engine.
 
 \begin{table}[h!]
 \centering
@@ -220,6 +220,6 @@ The implementation comprises:
 \end{enumerate}
 
 \section{Conclusion}
-WellSage delivers a mathematically grounded, deterministic decision-support architecture for Oil India Limited. By synthesizing geodetic spatial kernels, stratigraphic ontology alignment, drilling physics equations, and depth-correlated institutional memory, the system enables drilling teams to transition from reactive troubleshooting to proactive hazard mitigation.
+Namowell delivers a mathematically grounded, deterministic decision-support architecture for Oil India Limited. By synthesizing geodetic spatial kernels, stratigraphic ontology alignment, drilling physics equations, and depth-correlated institutional memory, the system enables drilling teams to transition from reactive troubleshooting to proactive hazard mitigation.
 
 \end{document}

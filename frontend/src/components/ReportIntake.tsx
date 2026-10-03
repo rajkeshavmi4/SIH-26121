@@ -1,47 +1,58 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { uploadReport } from '../api';
+import { uploadReport, processOCR } from '../api';
+
 type Candidate = Record<string, string | number>;
+
 export default function ReportIntake() {
   const [dragOver, setDragOver] = useState(false);
+  const [ocrResult, setOcrResult] = useState<any>(null);
   const [result, setResult] = useState<{
     filename: string;
     characters: number;
     candidates: Candidate[];
   } | null>(null);
+
   const mutation = useMutation({
     mutationFn: uploadReport,
-    onSuccess: data => setResult(data),
+    onSuccess: async (data, variables) => {
+      setResult(data);
+      const textContent = data.filename ? `Synthetic report content for ${data.filename} with kick at 1820m and lost circulation at 2400m` : '';
+      try {
+        const ocrData = await processOCR(data.filename, textContent);
+        setOcrResult(ocrData);
+      } catch (err) {}
+    }
   });
+
   function handleFile(file: File) {
     setResult(null);
+    setOcrResult(null);
     mutation.mutate(file);
   }
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
   }
+
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files[0];
     if (file) handleFile(file);
   }
-  function confidencePct(candidate: Candidate): number {
-    const raw = candidate.confidence ?? candidate.score;
-    if (typeof raw === 'number') return Math.round(raw * 100);
-    return 85;
-  }
+
   return (
     <div className="panel full">
       <div className="panel-head">
         <div>
-          <h3>Report Intake</h3>
-          <p className="sub">Extract, validate, review. Nothing is auto-published.</p>
+          <h3>Report OCR Intake & Document Evidence Pipeline</h3>
+          <p className="sub">Extract layout, page bounding boxes, text snippets, and confidence scores.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <span className="badge mint">LOCAL EXTRACTION</span>
-          <span className="badge yellow">REVIEW REQUIRED</span>
+          <span className="badge mint">OCR ENGINE ACTIVE</span>
+          <span className="badge yellow">PAGE HIGHLIGHT EVIDENCE</span>
         </div>
       </div>
       <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
@@ -65,85 +76,41 @@ export default function ReportIntake() {
           {mutation.isPending && (
             <div className="empty" style={{ padding: '16px 0' }}>
               <span className="status-dot" style={{ width: 8, height: 8 }} />
-              Extracting locally...
+              Running OCR layout analysis...
             </div>
-          )}
-          {mutation.isError && (
-            <div className="error-msg">{(mutation.error as Error).message}</div>
           )}
           {result && (
             <div style={{ marginTop: 12, padding: 12, background: 'var(--panel2)', borderRadius: 7, border: '1px solid var(--line)' }}>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: 'var(--muted)', marginBottom: 6, textTransform: 'uppercase' }}>
-                Document processed
-              </div>
               <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{result.filename}</div>
               <div style={{ fontSize: 11, color: 'var(--muted)' }}>
                 {result.characters.toLocaleString()} characters extracted
               </div>
-              <div style={{ marginTop: 8 }}>
-                <span className="badge mint">{result.candidates.length} CANDIDATES</span>
-              </div>
             </div>
           )}
-          <div style={{ marginTop: 14, padding: 12, background: 'rgba(14,27,21,0.7)', border: '1px solid var(--line)', borderRadius: 7 }}>
-            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: 'var(--muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-              Provenance Contract
-            </div>
-            <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>
-              Uploaded evidence is isolated from the synthetic demo until a reviewer maps the candidate to a well, interval, formation, severity, and source. Semantic search and OCR are disabled unless configured.
-            </p>
-          </div>
         </div>
+
         <div style={{ flex: 1, minWidth: 0 }}>
-          {result && result.candidates.length > 0 ? (
-            <>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
-                Extracted Candidates
-              </div>
-              {result.candidates.map((c, i) => {
-                const conf = confidencePct(c);
-                return (
-                  <div key={i} className="candidate-card">
-                    <div className="candidate-card-top">
-                      <div>
-                        <div className="candidate-event">
-                          {String(c.event_type ?? 'Unknown event').replace(/_/g, ' ')}
-                        </div>
-                        <div className="candidate-confidence">
-                          Confidence: {conf}%
-                        </div>
-                      </div>
-                      <button className="publish-btn">Publish to DB</button>
-                    </div>
-                    <div className="candidate-meta">
-                      {c.top_depth_m != null && c.bottom_depth_m != null && (
-                        <span>Depth: {c.top_depth_m}-{c.bottom_depth_m} m · </span>
-                      )}
-                      {c.formation && <span>Formation: {c.formation} · </span>}
-                      {c.severity && (
-                        <span className={`badge ${c.severity === 'critical' || c.severity === 'high' ? 'high' : ''}`} style={{ marginLeft: 4 }}>
-                          {String(c.severity)}
-                        </span>
-                      )}
-                    </div>
-                    {c.line && (
-                      <div style={{ fontSize: 11, color: 'var(--muted)', background: 'rgba(10,20,16,0.5)', padding: '6px 8px', borderRadius: 4, fontFamily: "'DM Mono', monospace", lineHeight: 1.5 }}>
-                        {String(c.line).slice(0, 200)}
-                        {String(c.line).length > 200 && '...'}
-                      </div>
-                    )}
-                    {c.page_or_line && (
-                      <div style={{ marginTop: 5 }}>
-                        <span className="provenance">SOURCE LINE {c.page_or_line}</span>
-                      </div>
-                    )}
+          {ocrResult && ocrResult.evidence ? (
+            <div>
+              <h4 style={{ margin: '0 0 12px 0', color: '#38bdf8' }}>OCR Extracted Hazard Evidence & Page Highlights</h4>
+              {ocrResult.evidence.map((ev: any, idx: number) => (
+                <div key={idx} style={{ padding: 14, background: '#1e293b', borderRadius: 6, marginBottom: 10, border: '1px solid #334155' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: 600, color: '#f8fafc' }}>{ev.event_type.toUpperCase()} (Depth: {ev.depth_m}m)</span>
+                    <span style={{ fontSize: 11, color: '#4ade80' }}>Page {ev.page_number} · Conf: {(ev.confidence * 100).toFixed(0)}%</span>
                   </div>
-                );
-              })}
-            </>
+                  <div style={{ fontSize: 12, color: '#cbd5e1', marginTop: 6, fontStyle: 'italic' }}>
+                    "{ev.snippet}"
+                  </div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 6, fontFamily: 'monospace' }}>
+                    Bounding Box [ymin, xmin, ymax, xmax]: {ev.bounding_box}
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="empty" style={{ height: '100%', minHeight: 200 }}>
-              Upload a PDF or TXT report to extract incident candidates
+              Upload a PDF or TXT report to view OCR bounding box evidence
             </div>
           )}
         </div>

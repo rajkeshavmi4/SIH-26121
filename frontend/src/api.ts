@@ -9,6 +9,7 @@ export type Scenario = {
   step_m: number;
   running: boolean;
 };
+
 export type Well = {
   id: string;
   name: string;
@@ -24,6 +25,7 @@ export type Well = {
   score_factors: Record<string, number>;
   missing_fields: string[];
 };
+
 export type Incident = {
   id: string;
   well_id: string;
@@ -36,10 +38,15 @@ export type Incident = {
   mitigation: string;
   source_document: string;
   source_page: number;
+  bounding_box?: string;
+  snippet?: string;
+  confidence?: number;
   source_type: string;
   is_synthetic: boolean;
+  approval_status?: string;
   description?: string;
 };
+
 export type Alert = {
   incident: Incident;
   status: string;
@@ -48,6 +55,24 @@ export type Alert = {
   data_completeness: string[];
   warning: string;
 };
+
+export type AlertRecord = {
+  id: string;
+  dedup_key: string;
+  scenario_id: string;
+  well_id: string;
+  incident_id: string;
+  event_type: string;
+  status: string;
+  escalation_level: string;
+  distance_m: number;
+  acknowledged_by?: string;
+  acknowledged_at?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Dashboard = {
   scenario: Scenario;
   active_well: Well;
@@ -55,130 +80,102 @@ export type Dashboard = {
   alerts: Alert[];
   incident_count: number;
 };
+
 export type Formation = {
   formation: string;
   top_depth_m: number;
   bottom_depth_m: number;
   color: string;
 };
+
 export type CorrelationResult = {
   scenario: Scenario;
   formations: Formation[];
   incidents: Incident[];
   alerts: Alert[];
 };
-export type TelemetryRecord = {
+
+export type EngineeringData = {
+  well_id: string;
+  casings: Array<{ id: number; outer_diameter_in: number; shoe_tvd_m: number; weight_ppf: number; grade: string; collapse_psi: number; burst_psi: number }>;
+  cementings: Array<{ id: number; slurry_density_sg: number; top_of_cement_m: number; bottom_of_cement_m: number; compressive_strength_psi: number }>;
+  muds: Array<{ id: number; depth_m: number; mud_type: string; mud_weight_sg: number; pv_cp: number; yp_lb_100ft2: number; ecd_sg: number }>;
+  bhas: Array<{ id: number; top_depth_m: number; bottom_depth_m: number; bit_diameter_in: number; bit_type: string; mwd_lwd_tools: string; motor_rss_flag: string }>;
+  trajectories: Array<{ id: number; measured_depth_m: number; inclination_deg: number; azimuth_deg: number; true_vertical_depth_m: number; dogleg_severity_deg100ft: number }>;
+  formations: Array<{ id: number; formation_name: string; top_tvd_m: number; bottom_tvd_m: number; lithology: string; pore_pressure_sg: number; frac_gradient_sg: number }>;
+};
+
+export type ReviewItem = {
   id: string;
-  well_id: string;
-  timestamp: string;
-  depth_m: number;
-  wob: number;
-  rpm: number;
-  torque: number;
-  spp: number;
-  ecd: number;
-  rop: number;
+  entity_type: string;
+  entity_id: string;
+  status: string;
+  reviewer_id?: string;
+  reviewer_notes?: string;
+  payload_json: string;
+  created_at: string;
 };
-export type TelemetryTrend = {
-  wob: 'up' | 'down' | 'stable';
-  rpm: 'up' | 'down' | 'stable';
-  torque: 'up' | 'down' | 'stable';
-  spp: 'up' | 'down' | 'stable';
-  ecd: 'up' | 'down' | 'stable';
-  rop: 'up' | 'down' | 'stable';
-};
-export type Anomaly = {
-  parameter: string;
-  value: number;
-  threshold: number;
-  severity: string;
+
+export type AuditLog = {
+  id: number;
+  actor: string;
+  user_role: string;
+  action: string;
+  resource_type: string;
+  resource_id?: string;
+  details?: string;
+  ip_address?: string;
   timestamp: string;
 };
-export type WellListResponse = {
-  items: Well[];
-  total: number;
-  page: number;
-  page_size: number;
+
+export type BenchmarkMetrics = {
+  scenario_id: string;
+  total_steps: number;
+  precision: number;
+  recall: number;
+  f1_score: number;
+  lead_time_m: number;
+  lead_time_min: number;
+  latency_ms_per_record: number;
+  total_samples: number;
+  true_positives: number;
+  false_positives: number;
+  false_negatives: number;
+  grade: string;
 };
-export type OffsetListResponse = {
-  offsets: Well[];
-  radius_km: number;
-  target_depth_m: number;
+
+export type ModelPredictOut = {
+  predicted_hazard: string;
+  calibrated_probability: number;
+  hazard_probabilities: Record<string, number>;
+  explainability: Array<{ feature: string; value: number; baseline: number; contribution: number }>;
 };
-export type RiskEvaluateRequest = {
-  well_id: string;
-  current_depth_m: number;
-  lookahead_m?: number;
-  formation?: string;
-};
-export type AlertResponse = Alert;
-export type UploadResult = {
-  filename: string;
-  characters: number;
-  candidates: Record<string, string | number>[];
-};
+
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, init);
   if (!res.ok) throw new Error((await res.text()) || 'API request failed');
   return res.json();
 }
+
 export const getScenarios = () => request<Scenario[]>('/api/scenarios');
-export const getDashboard = (id: string, radiusKm = 50) =>
-  request<Dashboard>(`/api/dashboard?scenario_id=${id}&radius_km=${radiusKm}`);
-export const getIncidents = (params: string) =>
-  request<Incident[]>(`/api/incidents${params}`);
-export const getCorrelation = (id: string) =>
-  request<CorrelationResult>(`/api/correlation?scenario_id=${id}`);
-export const mutateSimulation = (action: string, id: string) =>
-  request<Scenario>(`/api/simulation/${action}?scenario_id=${id}`, { method: 'POST' });
-export async function uploadReport(file: File): Promise<UploadResult> {
-  const form = new FormData();
-  form.append('file', file);
-  return request<UploadResult>('/api/documents/upload', { method: 'POST', body: form });
-}
-export const searchRecords = (q: string) =>
-  request<{ results: Incident[] }>(`/api/search?q=${encodeURIComponent(q)}`);
-export const getTelemetry = (wellId: string, limit = 20) =>
-  request<TelemetryRecord[]>(`/api/telemetry/${wellId}?limit=${limit}`);
-export const getTelemetryTrends = (wellId: string) =>
-  request<TelemetryTrend>(`/api/telemetry/${wellId}/trends`);
-export const getTelemetryAnomalies = (wellId: string) =>
-  request<Anomaly[]>(`/api/telemetry/${wellId}/anomalies`);
-export const getWells = (params?: { page?: number; page_size?: number; status?: string }) => {
-  const qs = new URLSearchParams();
-  if (params?.page != null) qs.set('page', String(params.page));
-  if (params?.page_size != null) qs.set('page_size', String(params.page_size));
-  if (params?.status) qs.set('status', params.status);
-  return request<WellListResponse>(`/api/wells${qs.toString() ? `?${qs}` : ''}`);
-};
-export const getWellOffsets = (
-  wellId: string,
-  params: { radius_km: number; target_depth_m: string }
-) => {
-  const qs = new URLSearchParams({
-    radius_km: String(params.radius_km),
-    target_depth_m: params.target_depth_m,
-  });
-  return request<OffsetListResponse>(`/api/wells/${wellId}/offsets?${qs}`);
-};
-export const getWellCorrelation = (
-  wellId: string,
-  params: { current_depth_m: number; lookahead_m?: number }
-) => {
-  const qs = new URLSearchParams({ current_depth_m: String(params.current_depth_m) });
-  if (params.lookahead_m != null) qs.set('lookahead_m', String(params.lookahead_m));
-  return request<CorrelationResult>(`/api/wells/${wellId}/correlation?${qs}`);
-};
-export const evaluateRisk = (req: RiskEvaluateRequest) =>
-  request<AlertResponse[]>('/api/risk/evaluate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(req),
-  });
-export const getAlerts = (wellId?: string, status?: string) => {
-  const qs = new URLSearchParams();
-  if (wellId) qs.set('well_id', wellId);
-  if (status) qs.set('status', status);
-  return request<AlertResponse[]>(`/api/alerts${qs.toString() ? `?${qs}` : ''}`);
-};
+export const getDashboard = (id: string, radiusKm = 50) => request<Dashboard>(`/api/dashboard?scenario_id=${id}&radius_km=${radiusKm}`);
+export const getIncidents = (params: string) => request<Incident[]>(`/api/incidents${params}`);
+export const getCorrelation = (id: string) => request<CorrelationResult>(`/api/correlation?scenario_id=${id}`);
+export const mutateSimulation = (action: string, id: string) => request<Scenario>(`/api/simulation/${action}?scenario_id=${id}`, { method: 'POST' });
+
+export const getEngineeringData = (wellId: string) => request<EngineeringData>(`/api/v1/engineering/${wellId}`);
+export const getTVDCorrelation = (scenarioId = 'scenario-1') => request<any>(`/api/v1/correlation/tvd-aware?scenario_id=${scenarioId}`);
+export const getAlertRecords = (scenarioId = 'scenario-1') => request<AlertRecord[]>(`/api/v1/alerts?scenario_id=${scenarioId}`);
+export const acknowledgeAlert = (alertId: string, notes?: string) => request<AlertRecord>(`/api/v1/alerts/${alertId}/acknowledge`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: 'engineer_1', notes }) });
+
+export const getPendingReviews = () => request<ReviewItem[]>('/api/v1/reviews/pending');
+export const approveReview = (reviewId: string, notes?: string) => request<ReviewItem>(`/api/v1/reviews/${reviewId}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reviewer_id: 'reviewer_1', notes }) });
+export const rejectReview = (reviewId: string, notes?: string) => request<ReviewItem>(`/api/v1/reviews/${reviewId}/reject`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reviewer_id: 'reviewer_1', notes }) });
+
+export const getAuditTrail = () => request<AuditLog[]>('/api/v1/audit-trail');
+export const processOCR = (filename: string, content: string) => request<any>(`/api/v1/documents/ocr-process?filename=${encodeURIComponent(filename)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
+export const trainMLModel = () => request<any>('/api/v1/models/train', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+export const predictHazard = (data: any) => request<ModelPredictOut>('/api/v1/models/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+export const runBenchmarkCourt = (scenarioId = 'scenario-1') => request<BenchmarkMetrics>('/api/v1/benchmark/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario_id: scenarioId }) });

@@ -1,14 +1,43 @@
+version: "3.8"
+
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: namowell-postgres
+    environment:
+      POSTGRES_DB: namowell
+      POSTGRES_USER: namowell_user
+      POSTGRES_PASSWORD: namowell_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U namowell_user -d namowell"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
-    image: python:3.11-slim
-    working_dir: /app
-    volumes: ["./:/app"]
-    command: sh -c "pip install -r backend/requirements.txt && python -m backend.app.seed && uvicorn backend.app.main:app --host 0.0.0.0 --port 8000"
-    ports: ["8000:8000"]
+    build:
+      context: ./backend
+    container_name: namowell-backend
+    environment:
+      DATABASE_URL: postgresql://namowell_user:namowell_password@postgres:5432/namowell
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   frontend:
-    image: node:22-slim
-    working_dir: /app/frontend
-    volumes: ["./:/app"]
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
-    ports: ["5173:5173"]
-    depends_on: [backend]
+    build:
+      context: ./frontend
+    container_name: namowell-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
