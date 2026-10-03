@@ -41,7 +41,7 @@ def test_correlation_api_and_deterministic_simulation():
     wells = client.get("/api/wells?page_size=1").json()["items"]
     if not wells:
         pytest.skip("integration requires the seeded demo database")
-    correlation = client.get("/api/wells/active-demo-1/correlation?current_depth_m=1000&lookahead_m=100")
+    correlation = client.get("/api/wells/active-volve-1/correlation?current_depth_m=1000&lookahead_m=100")
     assert correlation.status_code == 200
     assert "event_markers" in correlation.json()
     first = client.get("/api/simulation/state?scenario_id=scenario-1").json()["current_depth_m"]

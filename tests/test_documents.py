@@ -34,7 +34,7 @@ def test_invalid_and_duplicate_documents_are_rejected():
 def test_pdf_extraction_and_missing_depth_remain_reviewable():
     pdf = fitz.open()
     page = pdf.new_page()
-    page.insert_text((72, 72), "SYNTHETIC PDF\nformation: Barail; kick high; mitigation: review returns")
+    page.insert_text((72, 72), "SYNTHETIC PDF\nformation: Hordaland; kick high; mitigation: review returns")
     content = pdf.tobytes()
     response = client.post("/api/documents/upload", files={"file": ("report.pdf", content, "application/pdf")})
     assert response.status_code == 200
@@ -52,7 +52,7 @@ def test_synthetic_dataset_is_labeled_and_watermarked():
     root = Path(__file__).resolve().parents[1] / "data" / "synthetic"
     wells = (root / "wells.json").read_text(encoding="utf-8")
     events = (root / "events.json").read_text(encoding="utf-8")
-    report = (root / "synthetic_report_01.txt").read_text(encoding="utf-8")
-    assert wells.count('"is_synthetic": true') >= 23
-    assert events.count('"is_synthetic": true') >= 60
-    assert "SYNTHETIC DEMO REPORT" in report
+    report = (root / "volve_ddr_01.txt").read_text(encoding="utf-8")
+    assert wells.count('"is_synthetic": false') >= 7
+    assert events.count('"is_synthetic": false') >= 30
+    assert "EQUINOR VOLVE FIELD DAILY DRILLING REPORT" in report

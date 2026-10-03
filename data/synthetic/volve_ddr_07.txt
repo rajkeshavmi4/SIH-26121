@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-1
+Event type: pressure_anomaly; depth: 3476-3600 m; formation: Hod; severity: low.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

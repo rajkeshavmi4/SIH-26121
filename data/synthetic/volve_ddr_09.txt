@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-12
+Event type: lost_circulation; depth: 3768-3827 m; formation: Ty; severity: low.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

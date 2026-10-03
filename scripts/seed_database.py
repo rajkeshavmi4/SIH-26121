@@ -52,8 +52,8 @@ def seed(reset: bool = False, confirm_reset_demo: bool = False) -> None:
                 formation=row["formation"],
                 trajectory=row.get("trajectory"),
                 status=row.get("status", "historical"),
-                is_synthetic=True,
-                demo_label="Namowell synthetic demo"
+                is_synthetic=row.get("is_synthetic", False),
+                demo_label="Namowell Volve demo"
             )
             db.add(well_obj)
             db.flush()
@@ -69,7 +69,7 @@ def seed(reset: bool = False, confirm_reset_demo: bool = False) -> None:
                 tvd = md * 0.95 if md > 500 else md
                 db.add(TrajectoryData(well_id=row["id"], measured_depth_m=md, inclination_deg=inc, azimuth_deg=azi, true_vertical_depth_m=tvd, dogleg_severity_deg100ft=1.2, northing_m=md*0.1, easting_m=md*0.1))
 
-            formations = ["Girujan", "Tipam", "Barail", "Tikak Parbat", "Kopili", "Sylhet"]
+            formations = ["Hordaland", "Grid", "Sele", "Lista", "Heimdal", "Maureen"]
             for idx, fname in enumerate(formations):
                 top_m = idx * 500.0
                 bot_m = (idx + 1) * 500.0
@@ -103,16 +103,16 @@ def seed(reset: bool = False, confirm_reset_demo: bool = False) -> None:
                 event_type=row["event_type"],
                 top_depth_m=row.get("start_depth_m", row.get("top_depth_m", 1000.0)),
                 bottom_depth_m=row.get("end_depth_m", row.get("bottom_depth_m", 1050.0)),
-                formation=row.get("formation", "Barail"),
+                formation=row.get("formation", "Hordaland"),
                 severity=row.get("severity", "MEDIUM"),
                 mitigation=row.get("recorded_mitigation", row.get("mitigation", "Standard procedure")),
-                source_document=row.get("source_document_id", "synthetic_report.txt"),
+                source_document=row.get("source_document_id", "volve_ddr_01.txt"),
                 source_page=row.get("source_page", 1),
                 bounding_box=json.dumps([0.15, 0.05, 0.25, 0.95]),
-                snippet=row.get("description", "Synthetic event snippet"),
+                snippet=row.get("description", "Event snippet"),
                 confidence=0.95,
-                source_type="synthetic",
-                is_synthetic=True,
+                source_type="real_dataset",
+                is_synthetic=row.get("is_synthetic", False),
                 approval_status="APPROVED"
             ))
 

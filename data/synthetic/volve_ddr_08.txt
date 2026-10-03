@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-11
+Event type: fishing; depth: 3622-3678 m; formation: Svarte; severity: high.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

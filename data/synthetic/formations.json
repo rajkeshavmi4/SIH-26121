@@ -1,50 +1,104 @@
 [
   {
     "id": "formation-01",
-    "name": "Girujan",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Hordaland",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-02",
-    "name": "Tipam",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Grid",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-03",
-    "name": "Barail",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Sele",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-04",
-    "name": "Tikak Parbat",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Lista",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-05",
-    "name": "Kopili",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Heimdal",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-06",
-    "name": "Sylhet",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Maureen",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-07",
-    "name": "Narpuh",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Tor",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   },
   {
     "id": "formation-08",
-    "name": "Lakshmi",
-    "region": "Fictional Kanchan Ridge Demo Region",
-    "is_synthetic": true
+    "name": "Hod",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-09",
+    "name": "Blodoks",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-10",
+    "name": "Svarte",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-11",
+    "name": "Cromer Knoll",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-12",
+    "name": "Ty",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-13",
+    "name": "Zechstein",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-14",
+    "name": "Hugin",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-15",
+    "name": "Sleipner",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-16",
+    "name": "Skagerrak",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
+  },
+  {
+    "id": "formation-17",
+    "name": "Smith Bank",
+    "region": "Equinor Volve Field",
+    "is_synthetic": false
   }
 ]

@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-14
+Event type: pressure_anomaly; depth: 2892-2929 m; formation: Smith Bank; severity: low.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

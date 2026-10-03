@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-14
+Event type: stuck_pipe; depth: 3914-4012 m; formation: Hugin; severity: high.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

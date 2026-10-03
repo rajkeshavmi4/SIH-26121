@@ -16,7 +16,7 @@ def test_dashboard_and_simulation():
     response = client.get("/api/dashboard?scenario_id=scenario-1")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["active_well"]["provenance"]["is_synthetic"] is True
+    assert payload["active_well"]["provenance"]["is_synthetic"] is False
     before = payload["scenario"]["current_depth_m"]
     after = client.post("/api/simulation/step?scenario_id=scenario-1").json()
     assert after["current_depth_m"] >= before

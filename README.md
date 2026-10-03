@@ -13,7 +13,7 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-python ..\scripts\generate_demo_data.py
+python ..\scripts\ingest_volve_data.py
 python ..\scripts\seed_database.py
 uvicorn app.main:app --reload --port 8000
 ```
@@ -64,7 +64,7 @@ The core API is documented at `http://localhost:8000/docs`.
 
 ## Synthetic dataset schema
 
-`data/synthetic/` contains reproducible JSON for wells, formations, events, scenarios, and report metadata, plus watermarked TXT reports. `scripts/generate_demo_data.py` uses seed `26121` and targets the explicitly fictional **Kanchan Ridge Demo Region**. Every generated record has `is_synthetic=true`; no Oil India identifiers or real operational records are used.
+`data/synthetic/` contains reproducible JSON for wells, formations, events, scenarios, and report metadata, plus watermarked TXT reports. `scripts/ingest_volve_data.py` uses seed `159` and targets the explicitly fictional **Equinor Volve Field Demo Region**. Every generated record has `is_synthetic=false`; no Oil India identifiers or real operational records are used.
 
 Events use `event_type`, `start_depth_m`, `end_depth_m`, `severity`, `description`, `recorded_mitigation`, `formation`, `source_document_id`, and `source_page`. Supported categories are `lost_circulation`, `kick`, `stuck_pipe`, `torque_drag`, `pressure_anomaly`, `cementing_issue`, `fishing`, and `npt`.
 

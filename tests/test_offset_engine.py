@@ -64,8 +64,8 @@ def test_deterministic_ranking_and_weight_validation():
 def test_offsets_api_returns_breakdown_and_exclusions():
     if not client.get("/api/wells?page_size=1").json()["items"]:
         pytest.skip("offset API integration requires the seeded demo database")
-    response = client.get("/api/wells/active-demo-1/offsets?radius_km=50&target_depth_m=1000-1400&limit=3")
+    response = client.get("/api/wells/active-volve-1/offsets?radius_km=50&target_depth_m=1000-1400&limit=3")
     assert response.status_code == 200
     payload = response.json()
     assert payload["weight_note"].startswith("Unvalidated")
-    assert all("score_breakdown" in item and item["well_id"] != "active-demo-1" for item in payload["items"])
+    assert all("score_breakdown" in item and item["well_id"] != "active-volve-1" for item in payload["items"])

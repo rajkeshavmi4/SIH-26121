@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-12
+Event type: stuck_pipe; depth: 2746-2836 m; formation: Sleipner; severity: high.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.

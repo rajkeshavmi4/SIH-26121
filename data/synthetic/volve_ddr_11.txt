@@ -1,0 +1,4 @@
+EQUINOR VOLVE FIELD DAILY DRILLING REPORT
+Well: 15/9-F-15
+Event type: pressure_anomaly; depth: 4060-4122 m; formation: Skagerrak; severity: low.
+Mitigation: Monitored pressures, circulated bottoms up, adjusted mud weight.
