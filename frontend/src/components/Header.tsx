@@ -23,7 +23,7 @@ export default function Header({ scenarios, scenarioId, onScenario, activeTab, o
       <div className="shell" style={{ padding: '0 28px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 60 }}>
           <div className="brand" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 20, fontWeight: 700, color: '#38bdf8', tracking: '0.05em' }}>NAMOWELL AI</span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: '#38bdf8', letterSpacing: '0.05em' }}>NAMOWELL AI</span>
             <span style={{ fontSize: 11, background: '#1e293b', color: '#94a3b8', padding: '2px 8px', borderRadius: 4 }}>Subsurface Intelligence</span>
           </div>
           <div className="top-actions" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>

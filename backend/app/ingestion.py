@@ -1,4 +1,5 @@
 import re
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 EVENT_RULES = {
@@ -23,6 +24,19 @@ def extract_pages(filename: str, content: bytes) -> list[str]:
             pages = [page.get_text() for page in document]
             if any(page.strip() for page in pages):
                 return pages
+            try:
+                from PIL import Image
+                import pytesseract
+
+                ocr_pages = []
+                for page in document:
+                    pixmap = page.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
+                    image = Image.open(BytesIO(pixmap.tobytes("png")))
+                    ocr_pages.append(pytesseract.image_to_string(image))
+                if any(page.strip() for page in ocr_pages):
+                    return ocr_pages
+            except (ImportError, OSError, RuntimeError):
+                pass
         except Exception as fitz_error:
             pages = None
         try:

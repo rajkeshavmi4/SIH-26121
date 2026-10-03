@@ -100,7 +100,7 @@ export type EngineeringData = {
   casings: Array<{ id: number; outer_diameter_in: number; shoe_tvd_m: number; weight_ppf: number; grade: string; collapse_psi: number; burst_psi: number }>;
   cementings: Array<{ id: number; slurry_density_sg: number; top_of_cement_m: number; bottom_of_cement_m: number; compressive_strength_psi: number }>;
   muds: Array<{ id: number; depth_m: number; mud_type: string; mud_weight_sg: number; pv_cp: number; yp_lb_100ft2: number; ecd_sg: number }>;
-  bhas: Array<{ id: number; top_depth_m: number; bottom_depth_m: number; bit_diameter_in: number; bit_type: string; mwd_lwd_tools: string; motor_rss_flag: string }>;
+  bhas: Array<{ id: number; top_depth_m: number; bottom_depth_m: number; bit_diameter_in: number; bit_type: string; mwd_lwd_tools: string; motor_rss_flag: string; max_wob_kda: number }>;
   trajectories: Array<{ id: number; measured_depth_m: number; inclination_deg: number; azimuth_deg: number; true_vertical_depth_m: number; dogleg_severity_deg100ft: number }>;
   formations: Array<{ id: number; formation_name: string; top_tvd_m: number; bottom_tvd_m: number; lithology: string; pore_pressure_sg: number; frac_gradient_sg: number }>;
 };
@@ -151,6 +151,29 @@ export type ModelPredictOut = {
   explainability: Array<{ feature: string; value: number; baseline: number; contribution: number }>;
 };
 
+export type TelemetryRecord = {
+  id: string | number;
+  well_id: string;
+  timestamp: string;
+  depth_m: number;
+  wob: number;
+  rpm: number;
+  torque: number;
+  spp: number;
+  ecd: number;
+  rop: number;
+};
+
+export type Anomaly = { parameter: string; severity?: string; [key: string]: unknown };
+
+export type UploadResult = {
+  filename: string;
+  characters: number;
+  candidates: Candidate[];
+};
+
+type Candidate = Record<string, string | number>;
+
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -162,6 +185,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const getScenarios = () => request<Scenario[]>('/api/scenarios');
 export const getDashboard = (id: string, radiusKm = 50) => request<Dashboard>(`/api/dashboard?scenario_id=${id}&radius_km=${radiusKm}`);
 export const getIncidents = (params: string) => request<Incident[]>(`/api/incidents${params}`);
+export const searchRecords = (query: string) => request<{ results: Incident[] }>(`/api/events/search?q=${encodeURIComponent(query)}&page_size=50`).then(payload => ({ results: payload.results ?? [] }));
 export const getCorrelation = (id: string) => request<CorrelationResult>(`/api/correlation?scenario_id=${id}`);
 export const mutateSimulation = (action: string, id: string) => request<Scenario>(`/api/simulation/${action}?scenario_id=${id}`, { method: 'POST' });
 
@@ -179,3 +203,10 @@ export const processOCR = (filename: string, content: string) => request<any>(`/
 export const trainMLModel = () => request<any>('/api/v1/models/train', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
 export const predictHazard = (data: any) => request<ModelPredictOut>('/api/v1/models/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
 export const runBenchmarkCourt = (scenarioId = 'scenario-1') => request<BenchmarkMetrics>('/api/v1/benchmark/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario_id: scenarioId }) });
+export const uploadReport = (file: File) => {
+  const form = new FormData();
+  form.append('file', file);
+  return request<{ filename: string; extracted_text?: string | null; candidates?: Candidate[] }>('/api/documents/upload', { method: 'POST', body: form }).then(payload => ({ filename: payload.filename, characters: payload.extracted_text?.length ?? 0, candidates: payload.candidates ?? [] }));
+};
+export const getTelemetry = (wellId: string, limit = 20) => request<any[]>(`/api/telemetry/${wellId}?limit=${limit}`).then(rows => rows.map(row => ({ id: row.id, well_id: row.well_id, timestamp: row.timestamp, depth_m: row.measured_depth_m, wob: row.wob ?? 0, rpm: row.rpm ?? 0, torque: row.torque ?? 0, spp: row.standpipe_pressure_kpa ? row.standpipe_pressure_kpa / 100 : 0, ecd: row.ecd_kgL ?? 0, rop: row.rop_mhr ?? 0 })) as TelemetryRecord[]);
+export const getTelemetryAnomalies = (wellId: string) => request<Anomaly[]>(`/api/telemetry/${wellId}/anomalies`);

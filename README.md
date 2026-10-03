@@ -64,7 +64,7 @@ The core API is documented at `http://localhost:8000/docs`.
 
 ## Synthetic dataset schema
 
-`data/synthetic/` contains reproducible JSON for wells, formations, events, scenarios, and report metadata, plus watermarked TXT reports. `scripts/ingest_volve_data.py` uses seed `159` and targets the explicitly fictional **Equinor Volve Field Demo Region**. Every generated record has `is_synthetic=false`; no Oil India identifiers or real operational records are used.
+`data/synthetic/` contains reproducible JSON for wells, formations, events, scenarios, and report metadata, plus watermarked TXT reports. `scripts/ingest_volve_data.py` uses seed `159` and targets the explicitly fictional **Equinor Volve Field Demo Region**. Demo records are explicitly marked synthetic in the database; no Oil India identifiers or real operational records are used.
 
 Events use `event_type`, `start_depth_m`, `end_depth_m`, `severity`, `description`, `recorded_mitigation`, `formation`, `source_document_id`, and `source_page`. Supported categories are `lost_circulation`, `kick`, `stuck_pipe`, `torque_drag`, `pressure_anomaly`, `cementing_issue`, `fishing`, and `npt`.
 
@@ -85,4 +85,6 @@ The backend foundation is organized under `backend/app/core`, `backend/app/db`, 
 
 ## Limitations
 
-The demo uses synthetic coordinates, formations, events, and report text. Map tiles are optional: the interface still renders the well table and a coordinate plot when tiles are unavailable. SQLite FTS5 is used for local search. OCR is intentionally optional and scanned PDFs are marked `scanned_unreadable` when no text layer is available. Semantic search, Alembic migrations, and external LLMs remain outside this offline prototype.
+The demo uses synthetic coordinates, formations, events, and report text. Map tiles are optional: the interface still renders the well table and a coordinate plot when tiles are unavailable. SQLite FTS5 is used for local search. Image-only PDFs use optional `pytesseract` OCR when the Tesseract executable is installed; otherwise they remain `scanned_unreadable` and reviewable. Semantic search, Alembic migrations, and external LLMs remain outside this offline prototype.
+
+Before production deployment, add an authenticated eRTMAC adapter that maps the vendor stream into the `Telemetry` schema, replace the deterministic/demo ML baseline with models trained and validated on approved OIL data, configure durable document storage and OCR workers, and complete operational review/audit controls. The current system is a decision-support prototype: historical proximity alerts and model outputs are not drilling instructions or failure probabilities.

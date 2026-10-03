@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { uploadReport, processOCR } from '../api';
+import type { UploadResult } from '../api';
 
 type Candidate = Record<string, string | number>;
 
 export default function ReportIntake() {
   const [dragOver, setDragOver] = useState(false);
   const [ocrResult, setOcrResult] = useState<any>(null);
-  const [result, setResult] = useState<{
-    filename: string;
-    characters: number;
-    candidates: Candidate[];
-  } | null>(null);
+  const [result, setResult] = useState<UploadResult | null>(null);
 
   const mutation = useMutation({
     mutationFn: uploadReport,
